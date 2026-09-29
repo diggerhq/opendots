@@ -1,5 +1,5 @@
 # Builds the Docker image (the Node build of the app) and publishes it to
-# GitHub Container Registry as ghcr.io/diggerhq/opendot:
+# GitHub Container Registry as ghcr.io/diggerhq/opendots:
 #   main            -> :main and :sha-<short sha>
 #   tags v*         -> :<version>, :<major>.<minor>, :latest
 # The repository is private, so the package is private too: pulling needs a

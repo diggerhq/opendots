@@ -13,7 +13,7 @@ while this repository is private.
 What runs where: one service built from the `Dockerfile`, the health check
 on `/api/health`, `apps-s-1vcpu-0.5gb` in `lon`. App Platform containers
 have no persistent disk, so the session map runs in process memory
-(`OPENDOT_STATE_STORE=memory`): on a deploy or restart the coordinator
+(`OPENDOTS_STATE_STORE=memory`): on a deploy or restart the coordinator
 session is found again by its idempotency key, and every topic keeps its
 notes (they live in project memory on OpenComputer) but gets a fresh worker
 on its next task, because the map from topic to worker session is gone.
@@ -25,11 +25,11 @@ for when the app is created, from `.env.local`.
 1. Locally, once: `npm ci && npx opencomputer login && npm run setup -- --target digitalocean`.
 2. Click the button (once the repository is public):
 
-   [![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/diggerhq/opendot/tree/main)
+   [![Deploy to DO](https://www.deploytodo.com/do-btn-blue.svg)](https://cloud.digitalocean.com/apps/new?repo=https://github.com/diggerhq/opendots/tree/main)
 
    Paste `OPENCOMPUTER_API_KEY`, `OPENCOMPUTER_PROJECT_ID`,
-   `OPENDOT_OWNER_SECRET`, `OPENDOT_COOKIE_SECRET` and
-   `OPENDOT_AGENT_SECRET` from `.env.local` when prompted.
+   `OPENDOTS_OWNER_SECRET`, `OPENDOTS_COOKIE_SECRET` and
+   `OPENDOTS_AGENT_SECRET` from `.env.local` when prompted.
 
    With a private repository, create the app from the control panel
    instead (GitHub source, this repository, the Dockerfile) and enter the
@@ -38,5 +38,5 @@ for when the app is created, from `.env.local`.
    `github` source your account can read.
 3. When the app is live, run `npm run setup -- --origin https://<app>.ondigitalocean.app`
    locally to deploy the agents pinned to that origin.
-4. Open the URL and sign in with `OPENDOT_OWNER_SECRET` from `.env.local`;
+4. Open the URL and sign in with `OPENDOTS_OWNER_SECRET` from `.env.local`;
    the sign-in registers the installation secret for the origin.

@@ -4,9 +4,9 @@
 // topics themselves: the memory inventory becomes the index and the session
 // map moves into the topic documents.
 //
-// Backends, selected by OPENDOT_STATE_STORE:
-//   fs      JSON files under OPENDOT_STATE_DIR (Node hosts; the default)
-//   kv      a Workers KV namespace bound as OPENDOT_STORE (Cloudflare)
+// Backends, selected by OPENDOTS_STATE_STORE:
+//   fs      JSON files under OPENDOTS_STATE_DIR (Node hosts; the default)
+//   kv      a Workers KV namespace bound as OPENDOTS_STORE (Cloudflare)
 //   memory  a Map in the process; lost on restart, warns at startup
 export interface BlobStore {
   get(key: string): Promise<string | null>;

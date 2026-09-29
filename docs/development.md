@@ -19,14 +19,14 @@ npm run test:e2e
 
 Playwright runs against real OpenComputer Development sessions. It starts
 its own app server on port 3101 with installation `e2e` and state under
-`.opendot-e2e/`. Before running, it checks that the target's `/api/health`
+`.opendots-e2e/`. Before running, it checks that the target's `/api/health`
 reports installation `e2e`; otherwise it aborts. The tests create and use
 their own sessions. See [the test configuration](../playwright.config.ts)
 and [environment setup](../e2e/env.ts).
 
 ## Local transcripts
 
-The dev server writes `.opendot/transcript.jsonl`: one record per owner
+The dev server writes `.opendots/transcript.jsonl`: one record per owner
 message, reply, topic start, worker outcome and Stop, with timestamps and
 session/turn IDs. Production builds do not write it. The file contains
 conversation content and stays in the ignored local state directory.

@@ -1,6 +1,6 @@
 // Development-only conversation log: what the owner saw and what the app
 // did, one JSON line each, under the state directory
-// (.opendot/transcript.jsonl, gitignored). Only the Vite dev server writes
+// (.opendots/transcript.jsonl, gitignored). Only the Vite dev server writes
 // it (import.meta.env.MODE is "development" there and nowhere else; a
 // production build compiles the checks to false) and only with the fs
 // store, so tests and hosts never do. Lines carry timestamps and the

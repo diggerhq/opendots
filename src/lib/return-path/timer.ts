@@ -4,7 +4,7 @@
 // uses the cron trigger).
 import { tick } from "@/lib/return-path";
 
-const KEY = Symbol.for("opendot.returnPathTimer");
+const KEY = Symbol.for("opendots.returnPathTimer");
 const INTERVAL_MS = 2000;
 
 function edgeRuntime(): boolean {

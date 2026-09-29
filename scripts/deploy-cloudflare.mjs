@@ -16,13 +16,13 @@ const SECRET_NAMES = [
   "OPENCOMPUTER_PROJECT_ID",
   "OPENCOMPUTER_ENVIRONMENT",
   "OPENCOMPUTER_API_URL",
-  "OPENDOT_OWNER_SECRET",
-  "OPENDOT_COOKIE_SECRET",
-  "OPENDOT_AGENT_SECRET",
-  "OPENDOT_INSTALLATION_ID",
-  "OPENDOT_APP_ORIGIN",
-  "OPENDOT_COORDINATOR_AGENT",
-  "OPENDOT_WORKER_AGENT",
+  "OPENDOTS_OWNER_SECRET",
+  "OPENDOTS_COOKIE_SECRET",
+  "OPENDOTS_AGENT_SECRET",
+  "OPENDOTS_INSTALLATION_ID",
+  "OPENDOTS_APP_ORIGIN",
+  "OPENDOTS_COORDINATOR_AGENT",
+  "OPENDOTS_WORKER_AGENT",
 ];
 
 function run(command, args, { input, capture = false, env = {} } = {}) {
@@ -52,22 +52,22 @@ try {
   const missing = [
     "OPENCOMPUTER_API_KEY",
     "OPENCOMPUTER_PROJECT_ID",
-    "OPENDOT_OWNER_SECRET",
-    "OPENDOT_COOKIE_SECRET",
-    "OPENDOT_AGENT_SECRET",
+    "OPENDOTS_OWNER_SECRET",
+    "OPENDOTS_COOKIE_SECRET",
+    "OPENDOTS_AGENT_SECRET",
   ].filter((name) => !env[name]);
   if (missing.length) throw new Error(`Missing in .env.local: ${missing.join(", ")}. Run npm run setup first.`);
 
   const configPath = new URL("wrangler.jsonc", root);
   let config = await readFile(configPath, "utf8");
-  if (config.includes('"id": "opendot-store-local"')) {
-    console.log("Creating the OPENDOT_STORE KV namespace…");
-    const output = await wrangler(["kv", "namespace", "create", "OPENDOT_STORE"], { capture: true });
+  if (config.includes('"id": "opendots-store-local"')) {
+    console.log("Creating the OPENDOTS_STORE KV namespace…");
+    const output = await wrangler(["kv", "namespace", "create", "OPENDOTS_STORE"], { capture: true });
     process.stdout.write(output);
     const id = output.match(/"id":\s*"([a-f0-9]{32})"/)?.[1];
     if (!id)
       throw new Error("Could not read the namespace id from wrangler's output; put it into wrangler.jsonc by hand.");
-    config = config.replace('"id": "opendot-store-local"', `"id": "${id}"`);
+    config = config.replace('"id": "opendots-store-local"', `"id": "${id}"`);
     await writeFile(configPath, config);
     console.log(`Wrote the namespace id ${id} into wrangler.jsonc; commit that change.`);
   }
@@ -80,7 +80,7 @@ try {
   const secrets = Object.fromEntries(SECRET_NAMES.filter((name) => env[name]).map((name) => [name, env[name]]));
   await wrangler(["secret", "bulk"], { input: JSON.stringify(secrets) });
   console.log(`
-Deployed. If the Worker's URL is not the OPENDOT_APP_ORIGIN the agents were deployed with, run
+Deployed. If the Worker's URL is not the OPENDOTS_APP_ORIGIN the agents were deployed with, run
   npm run setup -- --origin https://<worker host>
 so the agents' managed connection points at it, then deploy again.`);
 } catch (error) {

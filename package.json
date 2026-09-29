@@ -1,5 +1,5 @@
 {
-  "name": "opendot",
+  "name": "opendots",
   "version": "0.0.1",
   "private": true,
   "license": "MIT",
@@ -14,27 +14,27 @@
         "description": "Your OpenComputer API key (`npx opencomputer login` stores it in `~/.opencomputer/config.json`). Server only."
       },
       "OPENCOMPUTER_PROJECT_ID": {
-        "description": "The OpenComputer project id `npm run setup` printed (it links or creates `opendot-dev`)."
+        "description": "The OpenComputer project id `npm run setup` printed (it links or creates `opendots-dev`)."
       },
-      "OPENDOT_OWNER_SECRET": {
+      "OPENDOTS_OWNER_SECRET": {
         "description": "The secret you will type into the login form; `npm run setup` generated one into `.env.local`, or `openssl rand -base64 24`."
       },
-      "OPENDOT_COOKIE_SECRET": {
+      "OPENDOTS_COOKIE_SECRET": {
         "description": "Signs the owner cookie; from `.env.local`, or `openssl rand -base64 32`."
       },
-      "OPENDOT_AGENT_SECRET": {
+      "OPENDOTS_AGENT_SECRET": {
         "description": "The installation secret the agents present; from `.env.local`, or `openssl rand -base64 32`. The app registers it with OpenComputer when you sign in."
       },
-      "OPENDOT_STORE": {
+      "OPENDOTS_STORE": {
         "description": "Workers KV for the session map (which coordinator and worker sessions this installation owns); any new namespace."
       }
     }
   },
   "scripts": {
     "dev": "vite dev --port 3100 --strictPort",
-    "dev:cloudflare": "OPENDOT_TARGET=cloudflare vite dev --port 3100 --strictPort",
+    "dev:cloudflare": "OPENDOTS_TARGET=cloudflare vite dev --port 3100 --strictPort",
     "build": "vite build",
-    "build:cloudflare": "OPENDOT_TARGET=cloudflare vite build",
+    "build:cloudflare": "OPENDOTS_TARGET=cloudflare vite build",
     "start": "srvx --prod --static ../client dist/server/server.js",
     "deploy": "npm run build:cloudflare && wrangler deploy",
     "deploy:cloudflare": "node scripts/deploy-cloudflare.mjs",

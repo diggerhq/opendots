@@ -40,34 +40,34 @@ export function env(): Env {
   if (environment !== "development" && environment !== "production") {
     throw new Error("OPENCOMPUTER_ENVIRONMENT must be development or production");
   }
-  const stateStore = read("OPENDOT_STATE_STORE") ?? "fs";
+  const stateStore = read("OPENDOTS_STATE_STORE") ?? "fs";
   if (stateStore !== "fs" && stateStore !== "kv" && stateStore !== "memory") {
-    throw new Error("OPENDOT_STATE_STORE must be fs, kv or memory");
+    throw new Error("OPENDOTS_STATE_STORE must be fs, kv or memory");
   }
-  const ownerSecret = required("OPENDOT_OWNER_SECRET");
-  const cookieSecret = required("OPENDOT_COOKIE_SECRET");
-  const agentSecret = required("OPENDOT_AGENT_SECRET");
+  const ownerSecret = required("OPENDOTS_OWNER_SECRET");
+  const cookieSecret = required("OPENDOTS_COOKIE_SECRET");
+  const agentSecret = required("OPENDOTS_AGENT_SECRET");
   if (ownerSecret.length < 16 || cookieSecret.length < 32 || agentSecret.length < 32) {
-    throw new Error("OPENDOT_* secrets are too short; generate them with npm run setup");
+    throw new Error("OPENDOTS_* secrets are too short; generate them with npm run setup");
   }
-  const appOrigin = read("OPENDOT_APP_ORIGIN");
-  const coordinatorAgent = read("OPENDOT_COORDINATOR_AGENT") ?? "opendot-dev";
+  const appOrigin = read("OPENDOTS_APP_ORIGIN");
+  const coordinatorAgent = read("OPENDOTS_COORDINATOR_AGENT") ?? "opendots-dev";
   cached = {
     apiUrl,
     apiKey: required("OPENCOMPUTER_API_KEY"),
     projectId: required("OPENCOMPUTER_PROJECT_ID"),
     environment,
     coordinatorAgent,
-    workerAgent: read("OPENDOT_WORKER_AGENT") ?? `${coordinatorAgent}--topic-worker`,
+    workerAgent: read("OPENDOTS_WORKER_AGENT") ?? `${coordinatorAgent}--topic-worker`,
     ownerSecret,
     cookieSecret,
     agentSecret,
-    installationId: read("OPENDOT_INSTALLATION_ID") ?? "default",
+    installationId: read("OPENDOTS_INSTALLATION_ID") ?? "default",
     ...(appOrigin ? { appOrigin: new URL(appOrigin).origin } : {}),
     stateStore,
-    stateDir: read("OPENDOT_STATE_DIR") ?? ".opendot",
+    stateDir: read("OPENDOTS_STATE_DIR") ?? ".opendots",
     // Cookies are Secure unless the app is explicitly run over plain http on localhost.
-    secureCookies: read("OPENDOT_ALLOW_INSECURE_COOKIES") !== "1",
+    secureCookies: read("OPENDOTS_ALLOW_INSECURE_COOKIES") !== "1",
   };
   return cached;
 }

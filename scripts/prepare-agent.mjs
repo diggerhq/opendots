@@ -4,7 +4,7 @@
 //     reads only modules inside an agent's directory, and declarations that
 //     share an id must agree)
 //  2. scripts/templates/app-connection.ts -> each agent's tools/app.ts
-//     with the app origin from OPENDOT_APP_ORIGIN (the CLI reads
+//     with the app origin from OPENDOTS_APP_ORIGIN (the CLI reads
 //     defineConnection() origins from source, so it must be a literal)
 //  3. removes the CLI's previous generated runtime so doctor does not scan it.
 
@@ -17,12 +17,12 @@ if (existsSync(new URL(".env.local", root))) loadEnvFile(new URL(".env.local", r
 
 const agents = ["coordinator", "topic-worker"];
 
-const origin = process.env.OPENDOT_APP_ORIGIN?.trim();
+const origin = process.env.OPENDOTS_APP_ORIGIN?.trim();
 if (!origin)
-  throw new Error("Set OPENDOT_APP_ORIGIN (npm run setup -- --origin https://...) before preparing the agents");
+  throw new Error("Set OPENDOTS_APP_ORIGIN (npm run setup -- --origin https://...) before preparing the agents");
 const url = new URL(origin);
 if (url.protocol !== "https:" || url.pathname !== "/" || url.search || url.hash) {
-  throw new Error("OPENDOT_APP_ORIGIN must be an https origin without a path");
+  throw new Error("OPENDOTS_APP_ORIGIN must be an https origin without a path");
 }
 const memory = await readFile(new URL("scripts/templates/memory.ts", root), "utf8");
 const connection = await readFile(new URL("scripts/templates/app-connection.ts", root), "utf8");

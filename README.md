@@ -1,4 +1,4 @@
-# OpenDot
+# OpenDots
 
 **An always-on personal agent you own, on the model you choose.**
 
@@ -43,8 +43,8 @@ You need **Node.js 22**, an OpenComputer account and an HTTPS tunnel to your
 machine. The app runs locally; the agents run on OpenComputer.
 
 ```sh
-git clone https://github.com/diggerhq/opendot.git
-cd opendot
+git clone https://github.com/diggerhq/opendots.git
+cd opendots
 npm ci
 npx opencomputer login
 ```
@@ -68,15 +68,15 @@ application secrets in `.env.local`, deploys both agents to Development,
 and seeds the example notes. The public URL lets the coordinator call the
 app's delegation tool.
 
-Open that HTTPS URL and sign in with `OPENDOT_OWNER_SECRET` from
+Open that HTTPS URL and sign in with `OPENDOTS_OWNER_SECRET` from
 `.env.local`. Keep both terminals running. If the tunnel URL changes, rerun
 setup with the new origin, restart the app, sign in again and replace the
 coordinator from the owner menu so its callback uses the new origin.
 
 ## Deploy
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/diggerhq/opendot)
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/diggerhq/opendot)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/diggerhq/opendots)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/diggerhq/opendots)
 
 Follow the host guide for secrets and agent setup:
 [Cloudflare Workers](docs/deploy/cloudflare.md) ·
@@ -92,7 +92,7 @@ origins and secret rotation; [.env.example](.env.example) lists the settings.
 
 ## Choose your model
 
-OpenDot is not tied to one model provider. Each agent names its model in
+OpenDots is not tied to one model provider. Each agent names its model in
 one line, and [OpenComputer](https://docs.opencomputer.dev/agents/models)
 handles provider credentials, so no API key goes into the code:
 

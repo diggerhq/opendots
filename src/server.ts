@@ -16,11 +16,11 @@ import { ensureReturnPathTimer } from "@/lib/return-path/timer";
 import { bindKvNamespace, type KvNamespaceLike } from "@/lib/store/kv";
 
 interface WorkerBindings {
-  readonly OPENDOT_STORE?: KvNamespaceLike;
+  readonly OPENDOTS_STORE?: KvNamespaceLike;
 }
 
 function bind(bindings: WorkerBindings | undefined): void {
-  if (bindings?.OPENDOT_STORE) bindKvNamespace(bindings.OPENDOT_STORE);
+  if (bindings?.OPENDOTS_STORE) bindKvNamespace(bindings.OPENDOTS_STORE);
 }
 
 export default {

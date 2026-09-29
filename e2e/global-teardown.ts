@@ -8,7 +8,7 @@ import { loadEnv } from "./env";
 export default async function teardown(): Promise<void> {
   if (process.env.BASE_URL) return;
   loadEnv();
-  const path = new URL("../.opendot-e2e/state.json", import.meta.url);
+  const path = new URL("../.opendots-e2e/state.json", import.meta.url);
   let state: { coordinator?: { subscriptionId?: string } };
   try {
     state = JSON.parse(readFileSync(path, "utf8"));

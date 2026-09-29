@@ -34,7 +34,7 @@ export function ConversationFrame({
   const panelRef = useRef<PanelImperativeHandle | null>(null);
   // The panel width the browser remembers; SSR renders the default width.
   const layout = useDefaultLayout({
-    id: "opendot:conversation-layout",
+    id: "opendots:conversation-layout",
     panelIds: ["conversation", "panel"],
     onlySaveAfterUserInteractions: true,
     storage: typeof window === "undefined" ? { getItem: () => null, setItem: () => undefined } : window.localStorage,

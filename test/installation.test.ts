@@ -19,17 +19,17 @@ function stubPlatform(status = 200) {
 
 test("sign-in registers the installation secret for the https origin", async () => {
   const calls = stubPlatform();
-  assert.equal(await registerInstallation("https://opendot.example"), "registered");
+  assert.equal(await registerInstallation("https://opendots.example"), "registered");
   assert.equal(calls.length, 1);
   assert.equal(
     calls[0]?.url,
-    "https://app.opencomputer.dev/api/managed-agents/projects/prj_test/secrets/OPENDOT_AGENT_SECRET",
+    "https://app.opencomputer.dev/api/managed-agents/projects/prj_test/secrets/OPENDOTS_AGENT_SECRET",
   );
   assert.equal(calls[0]?.init.method, "PUT");
   assert.deepEqual(JSON.parse(String(calls[0]?.init.body)), {
     value: "a".repeat(40),
     environment: "development",
-    allowedOrigins: ["https://opendot.example"],
+    allowedOrigins: ["https://opendots.example"],
   });
 });
 
@@ -37,14 +37,14 @@ test("a plain-http origin is not registered and a platform failure does not thro
   const calls = stubPlatform(500);
   assert.equal(await registerInstallation("http://localhost:3100"), "skipped");
   assert.equal(calls.length, 0);
-  assert.equal(await registerInstallation("https://opendot.example"), "failed");
+  assert.equal(await registerInstallation("https://opendots.example"), "failed");
   assert.equal(calls.length, 1);
 });
 
-test("OPENDOT_APP_ORIGIN wins over the request origin when set", () => {
-  const request = new Request("https://opendot-abcd.onrender.com/api/auth/login", { method: "POST" });
-  assert.equal(installationOrigin(request), "https://opendot.test");
-  testEnv({ OPENDOT_APP_ORIGIN: "" });
-  assert.equal(installationOrigin(request), "https://opendot-abcd.onrender.com");
+test("OPENDOTS_APP_ORIGIN wins over the request origin when set", () => {
+  const request = new Request("https://opendots-abcd.onrender.com/api/auth/login", { method: "POST" });
+  assert.equal(installationOrigin(request), "https://opendots.test");
+  testEnv({ OPENDOTS_APP_ORIGIN: "" });
+  assert.equal(installationOrigin(request), "https://opendots-abcd.onrender.com");
   testEnv();
 });

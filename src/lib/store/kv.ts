@@ -17,14 +17,14 @@ export interface KvNamespaceLike {
 
 let bound: KvNamespaceLike | undefined;
 
-/** Called by the Cloudflare server entry with the OPENDOT_STORE binding. */
+/** Called by the Cloudflare server entry with the OPENDOTS_STORE binding. */
 export function bindKvNamespace(namespace: KvNamespaceLike): void {
   bound = namespace;
 }
 
 export function kvBlobStore(): BlobStore {
   const namespace = () => {
-    if (!bound) throw new Error("OPENDOT_STATE_STORE=kv needs the OPENDOT_STORE KV binding (see wrangler.jsonc)");
+    if (!bound) throw new Error("OPENDOTS_STATE_STORE=kv needs the OPENDOTS_STORE KV binding (see wrangler.jsonc)");
     return bound;
   };
   return {

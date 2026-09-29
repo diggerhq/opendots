@@ -1,9 +1,9 @@
 # The universal path: the Node build of the app in one image.
-#   docker build -t opendot .
-#   docker run --env-file .env.local -p 3000:3000 -v opendot-data:/data opendot
+#   docker build -t opendots .
+#   docker run --env-file .env.local -p 3000:3000 -v opendots-data:/data opendots
 # Configuration is environment-only (.env.example). The session map is a
-# file under OPENDOT_STATE_DIR (/data here; mount a volume).
-# Published to ghcr.io/diggerhq/opendot by .github/workflows/image.yml.
+# file under OPENDOTS_STATE_DIR (/data here; mount a volume).
+# Published to ghcr.io/diggerhq/opendots by .github/workflows/image.yml.
 
 FROM node:22-alpine AS build
 WORKDIR /app
@@ -16,7 +16,7 @@ RUN npm run build
 FROM node:22-alpine AS runtime
 ENV NODE_ENV=production \
     PORT=3000 \
-    OPENDOT_STATE_DIR=/data
+    OPENDOTS_STATE_DIR=/data
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force

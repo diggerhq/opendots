@@ -32,7 +32,7 @@ function renderWithRouter(ui: ReactNode, topics: TopicSummary[] = []) {
   return render(<RouterProvider router={router} />);
 }
 
-const WHERE = "from agent opendot-dev--topic-worker (session worker-1, turn t) at 2026-09-11T00:00:00.000Z";
+const WHERE = "from agent opendots-dev--topic-worker (session worker-1, turn t) at 2026-09-11T00:00:00.000Z";
 
 test("markdown renders GFM with wrapped code blocks and inline code", async () => {
   render(

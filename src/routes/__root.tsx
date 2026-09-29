@@ -11,7 +11,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1, viewport-fit=cover" },
-      { title: "OpenDot" },
+      { title: "OpenDots" },
       { name: "description", content: "A personal assistant you deploy" },
       { name: "color-scheme", content: "light dark" },
     ],

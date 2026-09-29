@@ -1,1 +1,1 @@
-export default { name: "opendot-dev", agents: ["coordinator", "topic-worker"] };
+export default { name: "opendots-dev", agents: ["coordinator", "topic-worker"] };

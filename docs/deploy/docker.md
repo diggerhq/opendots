@@ -8,7 +8,7 @@ is recorded below.
 
 The image is the Node build of the app (`Dockerfile`, multi-stage on
 `node:22-alpine`, runs as the `node` user, listens on `PORT`, default 3000,
-health check on `GET /api/health`). It sets `OPENDOT_STATE_DIR=/data` for the
+health check on `GET /api/health`). It sets `OPENDOTS_STATE_DIR=/data` for the
 session map (mount a volume there). Everything else comes from the
 environment (`.env.example`).
 
@@ -18,15 +18,15 @@ environment (`.env.example`).
 npm ci
 npx opencomputer login
 npm run setup -- --target docker         # secrets and the project into .env.local; prints the steps
-docker run -d --name opendot -p 3000:3000 \
+docker run -d --name opendots -p 3000:3000 \
   --env-file .env.local \
-  -v opendot-data:/data \
-  ghcr.io/diggerhq/opendot:latest
+  -v opendots-data:/data \
+  ghcr.io/diggerhq/opendots:latest
 ```
 
 The package is private while the repository is: `docker login ghcr.io` with a
 GitHub token that has `read:packages`, or build it yourself with
-`docker build -t opendot .`.
+`docker build -t opendots .`.
 
 Put an https origin in front of port 3000 (your reverse proxy, or a tunnel
 such as `ngrok http --domain=<host> 3000`); the agents call back to that
@@ -38,27 +38,27 @@ so do not expose the container to the internet without one. Then:
 npm run setup -- --origin https://<that origin>   # deploys the agents pinned to it
 ```
 
-Open the origin and sign in with `OPENDOT_OWNER_SECRET` from `.env.local`;
+Open the origin and sign in with `OPENDOTS_OWNER_SECRET` from `.env.local`;
 the sign-in registers the installation secret with the platform for that
 origin.
 
 The state directory holds `state.json`, the session map: which coordinator
 session is live and which worker session each topic has. Notes are project
 memory on OpenComputer, not on the volume. On a host without a volume set
-`OPENDOT_STATE_STORE=memory`: after a restart the coordinator session is
+`OPENDOTS_STATE_STORE=memory`: after a restart the coordinator session is
 found again by its key and each topic gets a fresh worker on its next task.
 
 ## Evidence
 
 Local build with Docker 29.5 (colima, arm64) on 2026-09-10:
 
-- `docker build -t opendot:local .`: 43.6 s cold (dependency install
-  dominates; the build step itself is 2 s). Image `opendot:local`
+- `docker build -t opendots:local .`: 43.6 s cold (dependency install
+  dominates; the build step itself is 2 s). Image `opendots:local`
   **475 MB** (Node 22 on Alpine 3.24 is 170 MB of it; production
   `node_modules` 205 MB, of which `lucide-react` 44 MB and
   `@tanstack/start-plugin-core` with its `esbuild`/`prettier`/`@babel`
   dependencies 60 MB; the app's own `dist/` is 3 MB).
-- `docker run -d -p 3300:3000 --env-file .env.local -v opendot-matrix-test:/data opendot:local`:
+- `docker run -d -p 3300:3000 --env-file .env.local -v opendots-matrix-test:/data opendots:local`:
   `GET /api/health` returned `{"ok":true,"stateStore":"fs","environment":"development"}`
   in 111 ms; `/` redirected to `/login`; the log shows
   `return_path.timer_started` (interval 2 s); Docker reported the container

@@ -38,9 +38,9 @@ export default defineConfig({
         reuseExistingServer: false,
         timeout: 60_000,
         env: {
-          OPENDOT_INSTALLATION_ID: E2E_INSTALLATION_ID,
-          OPENDOT_STATE_DIR: ".opendot-e2e",
-          OPENDOT_ALLOW_INSECURE_COOKIES: "1",
+          OPENDOTS_INSTALLATION_ID: E2E_INSTALLATION_ID,
+          OPENDOTS_STATE_DIR: ".opendots-e2e",
+          OPENDOTS_ALLOW_INSECURE_COOKIES: "1",
         },
       },
   projects: [
