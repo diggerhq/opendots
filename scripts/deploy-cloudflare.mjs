@@ -16,13 +16,13 @@ const SECRET_NAMES = [
   "OPENCOMPUTER_PROJECT_ID",
   "OPENCOMPUTER_ENVIRONMENT",
   "OPENCOMPUTER_API_URL",
-  "OPENMUSE_OWNER_SECRET",
-  "OPENMUSE_COOKIE_SECRET",
-  "OPENMUSE_AGENT_SECRET",
-  "OPENMUSE_INSTALLATION_ID",
-  "OPENMUSE_APP_ORIGIN",
-  "OPENMUSE_COORDINATOR_AGENT",
-  "OPENMUSE_WORKER_AGENT",
+  "OPENDOT_OWNER_SECRET",
+  "OPENDOT_COOKIE_SECRET",
+  "OPENDOT_AGENT_SECRET",
+  "OPENDOT_INSTALLATION_ID",
+  "OPENDOT_APP_ORIGIN",
+  "OPENDOT_COORDINATOR_AGENT",
+  "OPENDOT_WORKER_AGENT",
 ];
 
 function run(command, args, { input, capture = false, env = {} } = {}) {
@@ -52,22 +52,22 @@ try {
   const missing = [
     "OPENCOMPUTER_API_KEY",
     "OPENCOMPUTER_PROJECT_ID",
-    "OPENMUSE_OWNER_SECRET",
-    "OPENMUSE_COOKIE_SECRET",
-    "OPENMUSE_AGENT_SECRET",
+    "OPENDOT_OWNER_SECRET",
+    "OPENDOT_COOKIE_SECRET",
+    "OPENDOT_AGENT_SECRET",
   ].filter((name) => !env[name]);
   if (missing.length) throw new Error(`Missing in .env.local: ${missing.join(", ")}. Run npm run setup first.`);
 
   const configPath = new URL("wrangler.jsonc", root);
   let config = await readFile(configPath, "utf8");
-  if (config.includes('"id": "openmuse-store-local"')) {
-    console.log("Creating the OPENMUSE_STORE KV namespace…");
-    const output = await wrangler(["kv", "namespace", "create", "OPENMUSE_STORE"], { capture: true });
+  if (config.includes('"id": "opendot-store-local"')) {
+    console.log("Creating the OPENDOT_STORE KV namespace…");
+    const output = await wrangler(["kv", "namespace", "create", "OPENDOT_STORE"], { capture: true });
     process.stdout.write(output);
     const id = output.match(/"id":\s*"([a-f0-9]{32})"/)?.[1];
     if (!id)
       throw new Error("Could not read the namespace id from wrangler's output; put it into wrangler.jsonc by hand.");
-    config = config.replace('"id": "openmuse-store-local"', `"id": "${id}"`);
+    config = config.replace('"id": "opendot-store-local"', `"id": "${id}"`);
     await writeFile(configPath, config);
     console.log(`Wrote the namespace id ${id} into wrangler.jsonc; commit that change.`);
   }
@@ -80,7 +80,7 @@ try {
   const secrets = Object.fromEntries(SECRET_NAMES.filter((name) => env[name]).map((name) => [name, env[name]]));
   await wrangler(["secret", "bulk"], { input: JSON.stringify(secrets) });
   console.log(`
-Deployed. If the Worker's URL is not the OPENMUSE_APP_ORIGIN the agents were deployed with, run
+Deployed. If the Worker's URL is not the OPENDOT_APP_ORIGIN the agents were deployed with, run
   npm run setup -- --origin https://<worker host>
 so the agents' managed connection points at it, then deploy again.`);
 } catch (error) {

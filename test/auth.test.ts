@@ -19,25 +19,25 @@ test("session cookie round-trips and expires", async () => {
 test("mutations need same origin and the csrf token from the cookie", async () => {
   const { value, session } = await issueSession();
   const base = { cookie: `om_session=${value}` };
-  const read = new Request("https://openmuse.test/api/x", { headers: base });
+  const read = new Request("https://opendot.test/api/x", { headers: base });
   assert.equal((await requireOwner(read)).ok, true);
-  const noToken = new Request("https://openmuse.test/api/x", {
+  const noToken = new Request("https://opendot.test/api/x", {
     method: "POST",
-    headers: { ...base, origin: "https://openmuse.test" },
+    headers: { ...base, origin: "https://opendot.test" },
   });
   assert.equal((await requireOwner(noToken, { mutation: true })).ok, false);
-  const wrongOrigin = new Request("https://openmuse.test/api/x", {
+  const wrongOrigin = new Request("https://opendot.test/api/x", {
     method: "POST",
     headers: { ...base, origin: "https://evil.test", "x-csrf-token": session.csrf },
   });
   assert.equal((await requireOwner(wrongOrigin, { mutation: true })).ok, false);
-  const good = new Request("https://openmuse.test/api/x", {
+  const good = new Request("https://opendot.test/api/x", {
     method: "POST",
-    headers: { ...base, origin: "https://openmuse.test", "x-csrf-token": session.csrf },
+    headers: { ...base, origin: "https://opendot.test", "x-csrf-token": session.csrf },
   });
   assert.equal((await requireOwner(good, { mutation: true })).ok, true);
   assert.equal(
-    sameOrigin(new Request("https://openmuse.test/api/x", { headers: { "sec-fetch-site": "cross-site" } })),
+    sameOrigin(new Request("https://opendot.test/api/x", { headers: { "sec-fetch-site": "cross-site" } })),
     false,
   );
 });
@@ -45,12 +45,12 @@ test("mutations need same origin and the csrf token from the cookie", async () =
 test("agent routes take the installation secret as a bearer token", () => {
   assert.equal(
     requireAgent(
-      new Request("https://openmuse.test/api/agent/x", { headers: { authorization: `Bearer ${"a".repeat(40)}` } }),
+      new Request("https://opendot.test/api/agent/x", { headers: { authorization: `Bearer ${"a".repeat(40)}` } }),
     ),
     null,
   );
   assert.equal(
-    requireAgent(new Request("https://openmuse.test/api/agent/x", { headers: { authorization: "Bearer nope" } }))
+    requireAgent(new Request("https://opendot.test/api/agent/x", { headers: { authorization: "Bearer nope" } }))
       ?.status,
     401,
   );

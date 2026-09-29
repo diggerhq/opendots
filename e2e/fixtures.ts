@@ -1,5 +1,5 @@
 // Signs the tests in the way the app itself does: the owner cookie is minted
-// with the app's own signing code and OPENMUSE_COOKIE_SECRET from the
+// with the app's own signing code and OPENDOT_COOKIE_SECRET from the
 // environment (.env.local), never by typing the owner secret into the form.
 import { type APIResponse, test as base, type Page } from "@playwright/test";
 import { loadEnv } from "./env";

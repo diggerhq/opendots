@@ -7,8 +7,8 @@ dist/
 !.env.example
 .dev.vars*
 .opencomputer/
-.openmuse/
-.openmuse-e2e/
+.opendot/
+.opendot-e2e/
 opencomputer/agents/*/.opencomputer/
 opencomputer/agents/*/workspace/
 opencomputer/agents/*/memory.ts

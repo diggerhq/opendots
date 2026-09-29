@@ -9,7 +9,7 @@ export function usePersistedState<T extends string | number | boolean>(
   const [value, setValue] = useState<T>(initial);
   useEffect(() => {
     try {
-      const stored = window.localStorage.getItem(`openmuse:${key}`);
+      const stored = window.localStorage.getItem(`opendot:${key}`);
       if (stored !== null) setValue(JSON.parse(stored) as T);
     } catch {
       /* private mode or no storage */
@@ -18,7 +18,7 @@ export function usePersistedState<T extends string | number | boolean>(
   const update = (next: T) => {
     setValue(next);
     try {
-      window.localStorage.setItem(`openmuse:${key}`, JSON.stringify(next));
+      window.localStorage.setItem(`opendot:${key}`, JSON.stringify(next));
     } catch {
       /* ignore */
     }

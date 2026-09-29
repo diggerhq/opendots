@@ -38,9 +38,9 @@ export default defineConfig({
         reuseExistingServer: false,
         timeout: 60_000,
         env: {
-          OPENMUSE_INSTALLATION_ID: E2E_INSTALLATION_ID,
-          OPENMUSE_STATE_DIR: ".openmuse-e2e",
-          OPENMUSE_ALLOW_INSECURE_COOKIES: "1",
+          OPENDOT_INSTALLATION_ID: E2E_INSTALLATION_ID,
+          OPENDOT_STATE_DIR: ".opendot-e2e",
+          OPENDOT_ALLOW_INSECURE_COOKIES: "1",
         },
       },
   projects: [

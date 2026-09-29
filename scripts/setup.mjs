@@ -65,34 +65,34 @@ const secret = (bytes) => randomBytes(bytes).toString("base64url");
 
 // What to paste into a host that cannot generate values, by name only; the
 // values are in .env.local. The OpenComputer key is never printed anywhere.
-const PASTE = ["OPENCOMPUTER_API_KEY", "OPENCOMPUTER_PROJECT_ID", "OPENMUSE_OWNER_SECRET", "OPENMUSE_COOKIE_SECRET"];
-const PASTE_WITH_AGENT = [...PASTE, "OPENMUSE_AGENT_SECRET"];
+const PASTE = ["OPENCOMPUTER_API_KEY", "OPENCOMPUTER_PROJECT_ID", "OPENDOT_OWNER_SECRET", "OPENDOT_COOKIE_SECRET"];
+const PASTE_WITH_AGENT = [...PASTE, "OPENDOT_AGENT_SECRET"];
 
 function steps(target, originKnown) {
   const finish = originKnown
-    ? "The agents are deployed for that origin. Open it and sign in with OPENMUSE_OWNER_SECRET from .env.local."
-    : "When the host has given the app its URL:\n  npm run setup -- --origin https://<the app's host>\nthen open it and sign in with OPENMUSE_OWNER_SECRET from .env.local.";
+    ? "The agents are deployed for that origin. Open it and sign in with OPENDOT_OWNER_SECRET from .env.local."
+    : "When the host has given the app its URL:\n  npm run setup -- --origin https://<the app's host>\nthen open it and sign in with OPENDOT_OWNER_SECRET from .env.local.";
   const paste = (names) => `Paste, from .env.local: ${names.join(", ")}.`;
   switch (target) {
     case "cloudflare":
       return `Cloudflare Workers (docs/deploy/cloudflare.md)
-  Button (public repository only): https://deploy.workers.cloudflare.com/?url=https://github.com/diggerhq/openmuse
+  Button (public repository only): https://deploy.workers.cloudflare.com/?url=https://github.com/diggerhq/opendot
     ${paste(PASTE_WITH_AGENT)} Cloudflare creates the KV namespace and the cron trigger from wrangler.jsonc.
   CLI:  npx wrangler login && npm run deploy:cloudflare
     creates the KV namespace, uploads every value in .env.local as a Worker secret, deploys; prints the Worker URL.
 ${finish}`;
     case "docker":
       return `Docker (docs/deploy/docker.md)
-  docker run -d --name openmuse -p 3000:3000 --env-file .env.local -v openmuse-data:/data ghcr.io/diggerhq/openmuse:latest
-  The image keeps the session map under OPENMUSE_STATE_DIR=/data.
+  docker run -d --name opendot -p 3000:3000 --env-file .env.local -v opendot-data:/data ghcr.io/diggerhq/opendot:latest
+  The image keeps the session map under OPENDOT_STATE_DIR=/data.
   Put an https origin in front (a reverse proxy or a tunnel); the agents call back to it.
 ${finish}`;
     case "render":
       return `Render (docs/deploy/render.md)
-  Button: https://render.com/deploy?repo=https://github.com/diggerhq/openmuse
+  Button: https://render.com/deploy?repo=https://github.com/diggerhq/opendot
     ${paste(["OPENCOMPUTER_API_KEY", "OPENCOMPUTER_PROJECT_ID"])} Render generates the owner, cookie and agent secrets
-    (render.yaml generateValue); read OPENMUSE_OWNER_SECRET in the service's Environment tab to sign in.
-${finish.replace("OPENMUSE_OWNER_SECRET from .env.local", "the OPENMUSE_OWNER_SECRET Render generated")}`;
+    (render.yaml generateValue); read OPENDOT_OWNER_SECRET in the service's Environment tab to sign in.
+${finish.replace("OPENDOT_OWNER_SECRET from .env.local", "the OPENDOT_OWNER_SECRET Render generated")}`;
     case "fly":
       return `Fly.io (docs/deploy/fly.md)
   fly auth login && fly launch --copy-config --no-deploy   # fly.toml: Dockerfile build, /data volume, health check
@@ -109,7 +109,7 @@ try {
   const rotate = process.argv.includes("--rotate");
   const target = option("--target");
   if (target && !TARGETS.includes(target)) throw new Error(`--target must be one of ${TARGETS.join(", ")}`);
-  const origin = option("--origin") ?? env.OPENMUSE_APP_ORIGIN;
+  const origin = option("--origin") ?? env.OPENDOT_APP_ORIGIN;
   if (!origin && !target)
     throw new Error(
       "Pass --origin https://<the app's public https origin> (a tunnel for local runs, the host's URL for a deployment), or --target <host> to get the steps first.",
@@ -118,26 +118,26 @@ try {
     const url = new URL(origin);
     if (url.protocol !== "https:" || url.pathname !== "/")
       throw new Error("--origin must be an https origin without a path");
-    env.OPENMUSE_APP_ORIGIN = url.origin;
+    env.OPENDOT_APP_ORIGIN = url.origin;
   }
 
   const generated = [];
   for (const [name, bytes] of [
-    ["OPENMUSE_OWNER_SECRET", 24],
-    ["OPENMUSE_COOKIE_SECRET", 32],
+    ["OPENDOT_OWNER_SECRET", 24],
+    ["OPENDOT_COOKIE_SECRET", 32],
   ]) {
     if (!env[name] || rotate) {
       env[name] = secret(bytes);
       generated.push(name);
     }
   }
-  if (!env.OPENMUSE_AGENT_SECRET) {
-    env.OPENMUSE_AGENT_SECRET = secret(32);
-    generated.push("OPENMUSE_AGENT_SECRET");
+  if (!env.OPENDOT_AGENT_SECRET) {
+    env.OPENDOT_AGENT_SECRET = secret(32);
+    generated.push("OPENDOT_AGENT_SECRET");
   }
-  if (!env.OPENMUSE_INSTALLATION_ID) {
-    env.OPENMUSE_INSTALLATION_ID = randomBytes(8).toString("hex");
-    generated.push("OPENMUSE_INSTALLATION_ID");
+  if (!env.OPENDOT_INSTALLATION_ID) {
+    env.OPENDOT_INSTALLATION_ID = randomBytes(8).toString("hex");
+    generated.push("OPENDOT_INSTALLATION_ID");
   }
 
   const config = JSON.parse(
@@ -152,7 +152,7 @@ try {
   await writeEnvFile(env);
 
   if (!existsSync(new URL(".opencomputer/project.json", root))) {
-    await cli(["link", "--create-project", "openmuse-dev"]);
+    await cli(["link", "--create-project", "opendot-dev"]);
   }
   const binding = JSON.parse(await readFile(new URL(".opencomputer/project.json", root), "utf8"));
   if (new URL(binding.apiUrl).origin !== env.OPENCOMPUTER_API_URL) {
@@ -161,12 +161,12 @@ try {
   // Cloud agent ids: the first agent in opencomputer/project.ts is the
   // project's primary agent id; the others are <primary>--<local id>.
   env.OPENCOMPUTER_PROJECT_ID = binding.projectId;
-  env.OPENMUSE_COORDINATOR_AGENT = binding.agentId;
-  env.OPENMUSE_WORKER_AGENT = `${binding.agentId}--topic-worker`;
+  env.OPENDOT_COORDINATOR_AGENT = binding.agentId;
+  env.OPENDOT_WORKER_AGENT = `${binding.agentId}--topic-worker`;
   await writeEnvFile(env);
 
-  if (env.OPENMUSE_APP_ORIGIN) {
-    process.env.OPENMUSE_APP_ORIGIN = env.OPENMUSE_APP_ORIGIN;
+  if (env.OPENDOT_APP_ORIGIN) {
+    process.env.OPENDOT_APP_ORIGIN = env.OPENDOT_APP_ORIGIN;
     await import("./prepare-agent.mjs");
     await cli(["doctor"]);
     await cli(["deploy", "--alias", "development"]);
@@ -175,11 +175,11 @@ try {
   }
 
   console.log(`
-Ready. Project ${binding.projectName} (${binding.projectId}); agents ${env.OPENMUSE_COORDINATOR_AGENT} and ${env.OPENMUSE_WORKER_AGENT}${env.OPENMUSE_APP_ORIGIN ? ` deployed to Development for ${env.OPENMUSE_APP_ORIGIN}` : " not deployed yet (no origin)"}.
+Ready. Project ${binding.projectName} (${binding.projectId}); agents ${env.OPENDOT_COORDINATOR_AGENT} and ${env.OPENDOT_WORKER_AGENT}${env.OPENDOT_APP_ORIGIN ? ` deployed to Development for ${env.OPENDOT_APP_ORIGIN}` : " not deployed yet (no origin)"}.
 ${generated.length ? `Generated ${generated.join(", ")} into .env.local (mode 600).` : "Kept the existing secrets in .env.local."}
-${generated.includes("OPENMUSE_OWNER_SECRET") ? `\nOwner login secret (type it into the login form; it is not shown again):\n  ${env.OPENMUSE_OWNER_SECRET}\n` : ""}`);
+${generated.includes("OPENDOT_OWNER_SECRET") ? `\nOwner login secret (type it into the login form; it is not shown again):\n  ${env.OPENDOT_OWNER_SECRET}\n` : ""}`);
   if (target) {
-    console.log(steps(target, Boolean(env.OPENMUSE_APP_ORIGIN)));
+    console.log(steps(target, Boolean(env.OPENDOT_APP_ORIGIN)));
   } else {
     console.log(`Run locally:          npm run dev   (port 3100; the app origin must reach it, e.g. ngrok http --domain=<host> 3100)
 Deploy:               npm run setup -- --target <cloudflare|docker|fly|render> prints the steps; README "Deploy" has the buttons.`);

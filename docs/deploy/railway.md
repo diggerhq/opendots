@@ -6,8 +6,8 @@ Untested: no deploy has been exercised on this host and its spec (.railway/railw
 Status: **spec validated, deploy not exercised.** `.railway/railway.ts`
 typechecks against `railway@3.11.0` (`railway/iac`) and, evaluated with the
 package's own `createRailwayContext` the way `railway config plan` does,
-yields the intended graph: service `openmuse` from the Dockerfile with the
-health check, volume `openmuse-data` mounted at `/data`, the five secrets as
+yields the intended graph: service `opendot` from the Dockerfile with the
+health check, volume `opendot-data` mounted at `/data`, the five secrets as
 `preserve()`. No Railway account was available, so `railway config apply`
 and the deploy were not run.
 
@@ -35,20 +35,20 @@ npm ci && npx opencomputer login
 npm run setup -- --target railway          # secrets and the project into .env.local; prints these steps
 npm install -D railway                     # the IaC package the CLI evaluates
 npx railway login && npx railway init      # a new project, linked to this directory
-npx railway config plan                    # shows: create service openmuse, volume openmuse-data
+npx railway config plan                    # shows: create service opendot, volume opendot-data
 npx railway config apply
 npx railway variables --set "OPENCOMPUTER_API_KEY=<from .env.local>" \
   --set "OPENCOMPUTER_PROJECT_ID=<from .env.local>" \
-  --set "OPENMUSE_OWNER_SECRET=<from .env.local>" \
-  --set "OPENMUSE_COOKIE_SECRET=<from .env.local>" \
-  --set "OPENMUSE_AGENT_SECRET=<from .env.local>"
+  --set "OPENDOT_OWNER_SECRET=<from .env.local>" \
+  --set "OPENDOT_COOKIE_SECRET=<from .env.local>" \
+  --set "OPENDOT_AGENT_SECRET=<from .env.local>"
 npx railway up                             # builds the Dockerfile and deploys
 npx railway domain                         # a public https domain
 npm run setup -- --origin https://<that domain>
 ```
 
-The service source in `railway.ts` is `github("diggerhq/openmuse")`; with a
+The service source in `railway.ts` is `github("diggerhq/opendot")`; with a
 private repository connect GitHub to Railway with access to it, or remove
 `source` and keep deploying with `railway up` from your checkout. Open the
-domain and sign in with `OPENMUSE_OWNER_SECRET` from `.env.local`; the
+domain and sign in with `OPENDOT_OWNER_SECRET` from `.env.local`; the
 sign-in registers the installation secret for the origin.

@@ -1,6 +1,6 @@
 # Configuration and owner access
 
-OpenMuse reads configuration from the server environment. See
+OpenDot reads configuration from the server environment. See
 [`.env.example`](../.env.example) for every variable and its default, and
 [deployment guides](deploy/) for host-specific steps. Restart or redeploy
 the app after changing values.
@@ -23,15 +23,15 @@ The credentials have separate purposes:
 
 - `OPENCOMPUTER_API_KEY`: copied from the CLI login when absent; held by
   the app server, never sent to the browser.
-- `OPENMUSE_OWNER_SECRET`: entered in the login form. Setup prints a newly
+- `OPENDOT_OWNER_SECRET`: entered in the login form. Setup prints a newly
   generated value; it remains available in `.env.local`.
-- `OPENMUSE_COOKIE_SECRET`: signs owner login cookies.
-- `OPENMUSE_AGENT_SECRET`: authenticates the coordinator's calls back to
+- `OPENDOT_COOKIE_SECRET`: signs owner login cookies.
+- `OPENDOT_AGENT_SECRET`: authenticates the coordinator's calls back to
   the app. OpenComputer attaches it through a managed connection; agent
   code does not read its value.
 
 Keep `.env.local` private and out of git. On a host, put its values in the
-host's secret store. Render generates the three OpenMuse secrets itself;
+host's secret store. Render generates the three OpenDot secrets itself;
 use the owner secret from Render's Environment tab to sign in.
 
 ## The callback origin
@@ -40,7 +40,7 @@ The coordinator calls `/api/agent/start-topic` to start or reuse a topic's
 worker. Its managed connection is deployed for one public HTTPS origin;
 local development therefore needs an HTTPS tunnel to the app.
 
-Set `OPENMUSE_APP_ORIGIN` to that origin. If unset, sign-in uses the origin
+Set `OPENDOT_APP_ORIGIN` to that origin. If unset, sign-in uses the origin
 of its request. Every owner sign-in registers the installation secret with
 OpenComputer for that origin. Login can succeed even if registration fails;
 check the server's `installation.register_failed` log if delegation fails.
@@ -62,9 +62,9 @@ The app stores `state.json`: current and previous session IDs, subscription
 IDs, and the delivery ledger used by the fallback return path. Preserve it
 when moving or redeploying the app.
 
-- `fs` stores it under `OPENMUSE_STATE_DIR`, default `.openmuse`. Docker,
+- `fs` stores it under `OPENDOT_STATE_DIR`, default `.opendot`. Docker,
   Fly and Render use a persistent volume at `/data`.
-- `kv` uses the Cloudflare binding `OPENMUSE_STORE`. KV reads are eventually
+- `kv` uses the Cloudflare binding `OPENDOT_STORE`. KV reads are eventually
   consistent; concurrent writes from different isolates can overwrite one
   another. This is a single-owner app, not a shared multi-user service.
 - `memory` loses this index on restart; use it only for disposable runs.
@@ -77,7 +77,7 @@ Local development with the `fs` store also writes conversation content to
 
 ## Login and rotation
 
-OpenMuse has one owner secret, not user accounts. Login compares the
+OpenDot has one owner secret, not user accounts. Login compares the
 secret in constant time and limits failed attempts to five per client
 address per fifteen minutes **within each process or isolate**. The signed
 cookie expires after seven days and has `HttpOnly`, `Secure` and
@@ -85,7 +85,7 @@ cookie expires after seven days and has `HttpOnly`, `Secure` and
 and a CSRF token bound to the cookie; login checks the origin.
 
 For plain HTTP on localhost only, set
-`OPENMUSE_ALLOW_INSECURE_COOKIES=1`. Keep secure cookies enabled on hosts.
+`OPENDOT_ALLOW_INSECURE_COOKIES=1`. Keep secure cookies enabled on hosts.
 
 To recover owner access or invalidate existing login cookies:
 
@@ -104,5 +104,5 @@ host's secret store, then restart the app. Use random values of at least
 not invalidate existing cookies.
 
 Rotate an OpenComputer key in OpenComputer and update the app's copy
-separately. After changing `OPENMUSE_AGENT_SECRET` (at least 32 random
+separately. After changing `OPENDOT_AGENT_SECRET` (at least 32 random
 characters), restart the app and sign in again to register its new value.

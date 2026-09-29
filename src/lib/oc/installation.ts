@@ -2,16 +2,16 @@
 // platform attaches it to their managed connection to this app's origin. The
 // app owns it: on every owner sign-in it tells the platform the current value
 // and the origin it is allowed for, so a host that generated
-// OPENMUSE_AGENT_SECRET (Render), a rotation, or a moved origin needs no
+// OPENDOT_AGENT_SECRET (Render), a rotation, or a moved origin needs no
 // separate upload step. One installation is live per project: the last
 // sign-in owns the secret, and its origin must be the one the agents were
 // deployed with (npm run setup -- --origin).
 import { env } from "@/lib/env";
 import { oc } from "@/lib/oc/client";
 
-export const INSTALLATION_SECRET_NAME = "OPENMUSE_AGENT_SECRET";
+export const INSTALLATION_SECRET_NAME = "OPENDOT_AGENT_SECRET";
 
-/** The origin the platform is told about: OPENMUSE_APP_ORIGIN when set, else the sign-in request's own origin. */
+/** The origin the platform is told about: OPENDOT_APP_ORIGIN when set, else the sign-in request's own origin. */
 export function installationOrigin(request: Request): string {
   return env().appOrigin ?? new URL(request.url).origin;
 }
@@ -24,7 +24,7 @@ export async function registerInstallation(origin: string): Promise<"registered"
         level: "warn",
         event: "installation.skipped",
         origin,
-        message: "the app origin is not https; set OPENMUSE_APP_ORIGIN to the public https origin the agents can reach",
+        message: "the app origin is not https; set OPENDOT_APP_ORIGIN to the public https origin the agents can reach",
       }),
     );
     return "skipped";

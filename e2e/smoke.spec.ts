@@ -3,7 +3,7 @@ import { expect, test } from "./fixtures";
 test("unauthenticated visitors land on the login page", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveURL(/\/login$/);
-  await expect(page.getByRole("heading", { name: "OpenMuse" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "OpenDot" })).toBeVisible();
 });
 
 test("the owner cookie opens the main conversation", async ({ page, owner }) => {

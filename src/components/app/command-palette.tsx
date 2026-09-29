@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/command";
 import { useTopics } from "@/lib/client/queries";
 
-export const START_TOPIC_EVENT = "openmuse:start-topic";
+export const START_TOPIC_EVENT = "opendot:start-topic";
 
 export function CommandPalette() {
   const { csrf } = useOwner();

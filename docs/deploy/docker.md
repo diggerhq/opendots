@@ -8,7 +8,7 @@ is recorded below.
 
 The image is the Node build of the app (`Dockerfile`, multi-stage on
 `node:22-alpine`, runs as the `node` user, listens on `PORT`, default 3000,
-health check on `GET /api/health`). It sets `OPENMUSE_STATE_DIR=/data` for the
+health check on `GET /api/health`). It sets `OPENDOT_STATE_DIR=/data` for the
 session map (mount a volume there). Everything else comes from the
 environment (`.env.example`).
 
@@ -18,15 +18,15 @@ environment (`.env.example`).
 npm ci
 npx opencomputer login
 npm run setup -- --target docker         # secrets and the project into .env.local; prints the steps
-docker run -d --name openmuse -p 3000:3000 \
+docker run -d --name opendot -p 3000:3000 \
   --env-file .env.local \
-  -v openmuse-data:/data \
-  ghcr.io/diggerhq/openmuse:latest
+  -v opendot-data:/data \
+  ghcr.io/diggerhq/opendot:latest
 ```
 
 The package is private while the repository is: `docker login ghcr.io` with a
 GitHub token that has `read:packages`, or build it yourself with
-`docker build -t openmuse .`.
+`docker build -t opendot .`.
 
 Put an https origin in front of port 3000 (your reverse proxy, or a tunnel
 such as `ngrok http --domain=<host> 3000`); the agents call back to that
@@ -38,27 +38,27 @@ so do not expose the container to the internet without one. Then:
 npm run setup -- --origin https://<that origin>   # deploys the agents pinned to it
 ```
 
-Open the origin and sign in with `OPENMUSE_OWNER_SECRET` from `.env.local`;
+Open the origin and sign in with `OPENDOT_OWNER_SECRET` from `.env.local`;
 the sign-in registers the installation secret with the platform for that
 origin.
 
 The state directory holds `state.json`, the session map: which coordinator
 session is live and which worker session each topic has. Notes are project
 memory on OpenComputer, not on the volume. On a host without a volume set
-`OPENMUSE_STATE_STORE=memory`: after a restart the coordinator session is
+`OPENDOT_STATE_STORE=memory`: after a restart the coordinator session is
 found again by its key and each topic gets a fresh worker on its next task.
 
 ## Evidence
 
 Local build with Docker 29.5 (colima, arm64) on 2026-09-10:
 
-- `docker build -t openmuse:local .`: 43.6 s cold (dependency install
-  dominates; the build step itself is 2 s). Image `openmuse:local`
+- `docker build -t opendot:local .`: 43.6 s cold (dependency install
+  dominates; the build step itself is 2 s). Image `opendot:local`
   **475 MB** (Node 22 on Alpine 3.24 is 170 MB of it; production
   `node_modules` 205 MB, of which `lucide-react` 44 MB and
   `@tanstack/start-plugin-core` with its `esbuild`/`prettier`/`@babel`
   dependencies 60 MB; the app's own `dist/` is 3 MB).
-- `docker run -d -p 3300:3000 --env-file .env.local -v openmuse-matrix-test:/data openmuse:local`:
+- `docker run -d -p 3300:3000 --env-file .env.local -v opendot-matrix-test:/data opendot:local`:
   `GET /api/health` returned `{"ok":true,"stateStore":"fs","environment":"development"}`
   in 111 ms; `/` redirected to `/login`; the log shows
   `return_path.timer_started` (interval 2 s); Docker reported the container
@@ -72,7 +72,7 @@ Local build with Docker 29.5 (colima, arm64) on 2026-09-10:
   answered 200 and `state.json` was unchanged. Container and volume removed.
 - GHCR: the push of the publishing commit (`217e9bb`) ran
   `.github/workflows/image.yml` (run 34537570306): success in 9 min 25 s
-  (the arm64 half runs under QEMU), pushed `ghcr.io/diggerhq/openmuse:main`
-  and `ghcr.io/diggerhq/openmuse:sha-217e9bb`, multi-arch manifest
+  (the arm64 half runs under QEMU), pushed the image's `main`
+  and `sha-217e9bb` tags, multi-arch manifest
   `sha256:c92435a0…`. Pulling from this machine with a token without
   `read:packages` was refused (`denied`), as the private package should.

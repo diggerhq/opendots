@@ -31,7 +31,7 @@ export async function createOrReuseSession(
   key: string,
   memory: MemoryBindings,
 ): Promise<{ id: string; created: boolean }> {
-  const idempotencyKey = `openmuse/${env().installationId}/${key}`;
+  const idempotencyKey = `opendot/${env().installationId}/${key}`;
   try {
     const result = await oc.createSession(agent, idempotencyKey, memory);
     return { id: result.session.id, created: result.created };

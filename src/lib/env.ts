@@ -40,34 +40,34 @@ export function env(): Env {
   if (environment !== "development" && environment !== "production") {
     throw new Error("OPENCOMPUTER_ENVIRONMENT must be development or production");
   }
-  const stateStore = read("OPENMUSE_STATE_STORE") ?? "fs";
+  const stateStore = read("OPENDOT_STATE_STORE") ?? "fs";
   if (stateStore !== "fs" && stateStore !== "kv" && stateStore !== "memory") {
-    throw new Error("OPENMUSE_STATE_STORE must be fs, kv or memory");
+    throw new Error("OPENDOT_STATE_STORE must be fs, kv or memory");
   }
-  const ownerSecret = required("OPENMUSE_OWNER_SECRET");
-  const cookieSecret = required("OPENMUSE_COOKIE_SECRET");
-  const agentSecret = required("OPENMUSE_AGENT_SECRET");
+  const ownerSecret = required("OPENDOT_OWNER_SECRET");
+  const cookieSecret = required("OPENDOT_COOKIE_SECRET");
+  const agentSecret = required("OPENDOT_AGENT_SECRET");
   if (ownerSecret.length < 16 || cookieSecret.length < 32 || agentSecret.length < 32) {
-    throw new Error("OPENMUSE_* secrets are too short; generate them with npm run setup");
+    throw new Error("OPENDOT_* secrets are too short; generate them with npm run setup");
   }
-  const appOrigin = read("OPENMUSE_APP_ORIGIN");
-  const coordinatorAgent = read("OPENMUSE_COORDINATOR_AGENT") ?? "openmuse-dev";
+  const appOrigin = read("OPENDOT_APP_ORIGIN");
+  const coordinatorAgent = read("OPENDOT_COORDINATOR_AGENT") ?? "opendot-dev";
   cached = {
     apiUrl,
     apiKey: required("OPENCOMPUTER_API_KEY"),
     projectId: required("OPENCOMPUTER_PROJECT_ID"),
     environment,
     coordinatorAgent,
-    workerAgent: read("OPENMUSE_WORKER_AGENT") ?? `${coordinatorAgent}--topic-worker`,
+    workerAgent: read("OPENDOT_WORKER_AGENT") ?? `${coordinatorAgent}--topic-worker`,
     ownerSecret,
     cookieSecret,
     agentSecret,
-    installationId: read("OPENMUSE_INSTALLATION_ID") ?? "default",
+    installationId: read("OPENDOT_INSTALLATION_ID") ?? "default",
     ...(appOrigin ? { appOrigin: new URL(appOrigin).origin } : {}),
     stateStore,
-    stateDir: read("OPENMUSE_STATE_DIR") ?? ".openmuse",
+    stateDir: read("OPENDOT_STATE_DIR") ?? ".opendot",
     // Cookies are Secure unless the app is explicitly run over plain http on localhost.
-    secureCookies: read("OPENMUSE_ALLOW_INSECURE_COOKIES") !== "1",
+    secureCookies: read("OPENDOT_ALLOW_INSECURE_COOKIES") !== "1",
   };
   return cached;
 }

@@ -5,7 +5,7 @@ dist
 .output
 .wrangler
 .tanstack
-.openmuse
+.opendot
 .opencomputer
 .env
 .env.*

@@ -1,6 +1,9 @@
-# OpenMuse
+# OpenDot
 
-A personal assistant you deploy for yourself. Hand it work, keep talking,
+**An always-on personal agent you own, on the model you choose.**
+
+A personal assistant you deploy for yourself, and a model-agnostic alternative
+to OpenAI's Dots. Hand it work, keep talking,
 and get the results back in the same conversation.
 
 Longer jobs get a **topic**: its own conversation, notes you can read and
@@ -40,8 +43,8 @@ You need **Node.js 22**, an OpenComputer account and an HTTPS tunnel to your
 machine. The app runs locally; the agents run on OpenComputer.
 
 ```sh
-git clone https://github.com/diggerhq/openmuse.git
-cd openmuse
+git clone https://github.com/diggerhq/opendot.git
+cd opendot
 npm ci
 npx opencomputer login
 ```
@@ -65,15 +68,15 @@ application secrets in `.env.local`, deploys both agents to Development,
 and seeds the example notes. The public URL lets the coordinator call the
 app's delegation tool.
 
-Open that HTTPS URL and sign in with `OPENMUSE_OWNER_SECRET` from
+Open that HTTPS URL and sign in with `OPENDOT_OWNER_SECRET` from
 `.env.local`. Keep both terminals running. If the tunnel URL changes, rerun
 setup with the new origin, restart the app, sign in again and replace the
 coordinator from the owner menu so its callback uses the new origin.
 
 ## Deploy
 
-[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/diggerhq/openmuse)
-[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/diggerhq/openmuse)
+[![Deploy to Cloudflare](https://deploy.workers.cloudflare.com/button)](https://deploy.workers.cloudflare.com/?url=https://github.com/diggerhq/opendot)
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/diggerhq/opendot)
 
 Follow the host guide for secrets and agent setup:
 [Cloudflare Workers](docs/deploy/cloudflare.md) ·
@@ -86,6 +89,26 @@ requires a public repository.
 Access to your app is protected by an owner login.
 See [configuration and owner access](docs/configuration.md) for storage,
 origins and secret rotation; [.env.example](.env.example) lists the settings.
+
+## Choose your model
+
+OpenDot is not tied to one model provider. Each agent names its model in
+one line, and [OpenComputer](https://docs.opencomputer.dev/agents/models)
+handles provider credentials, so no API key goes into the code:
+
+```ts
+useModel("anthropic/claude-sonnet-4.6");      // default
+useModel("openai/<model>");                   // through your connected Codex account
+useModel("openrouter/<provider>/<model>");    // any managed OpenRouter model
+```
+
+Change the literal in
+[`coordinator/agent.ts`](opencomputer/agents/coordinator/agent.ts) (and the
+`MODEL` constant beside it, which the coordinator reports when asked) and in
+[`topic-worker/agent.ts`](opencomputer/agents/topic-worker/agent.ts), then
+run `npm run deploy:agents`. The coordinator and the workers can use
+different models. OpenAI models through your own account need
+[BYOK](https://docs.opencomputer.dev/agents/byok) on a Pro or Max plan.
 
 ## How it's built
 
@@ -126,3 +149,7 @@ Run `npm run check` for typechecking, lint, unit tests and agent validation.
 local transcripts and redeploying the agents.
 
 Early preview: the interface, agents and platform APIs are still changing.
+
+## License
+
+[MIT](LICENSE)

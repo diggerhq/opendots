@@ -1,9 +1,9 @@
 # The universal path: the Node build of the app in one image.
-#   docker build -t openmuse .
-#   docker run --env-file .env.local -p 3000:3000 -v openmuse-data:/data openmuse
+#   docker build -t opendot .
+#   docker run --env-file .env.local -p 3000:3000 -v opendot-data:/data opendot
 # Configuration is environment-only (.env.example). The session map is a
-# file under OPENMUSE_STATE_DIR (/data here; mount a volume).
-# Published to ghcr.io/diggerhq/openmuse by .github/workflows/image.yml.
+# file under OPENDOT_STATE_DIR (/data here; mount a volume).
+# Published to ghcr.io/diggerhq/opendot by .github/workflows/image.yml.
 
 FROM node:22-alpine AS build
 WORKDIR /app
@@ -16,7 +16,7 @@ RUN npm run build
 FROM node:22-alpine AS runtime
 ENV NODE_ENV=production \
     PORT=3000 \
-    OPENMUSE_STATE_DIR=/data
+    OPENDOT_STATE_DIR=/data
 WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev --no-audit --no-fund && npm cache clean --force

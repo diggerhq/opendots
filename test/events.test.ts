@@ -61,7 +61,7 @@ test("tool events become per-turn activity with durations, on both runtime shape
 });
 
 const WHERE =
-  "from agent openmuse-dev--topic-worker (session 829d8574-db27-1e26-cf30-a4a2cca65e0d, turn 5be49935-0ea7-4996-b584-84221dd31e86) at 2026-09-11T00:00:00.000Z";
+  "from agent opendot-dev--topic-worker (session 829d8574-db27-1e26-cf30-a4a2cca65e0d, turn 5be49935-0ea7-4996-b584-84221dd31e86) at 2026-09-11T00:00:00.000Z";
 
 test("delivered outcomes are recognised by the platform's input text", () => {
   const completed = parseOutcome(
@@ -69,7 +69,7 @@ test("delivered outcomes are recognised by the platform's input text", () => {
   );
   assert.deepEqual(completed, {
     status: "completed",
-    agentId: "openmuse-dev--topic-worker",
+    agentId: "opendot-dev--topic-worker",
     sessionId: "829d8574-db27-1e26-cf30-a4a2cca65e0d",
     turnId: "5be49935-0ea7-4996-b584-84221dd31e86",
     occurredAt: "2026-09-11T00:00:00.000Z",

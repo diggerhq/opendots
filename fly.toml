@@ -4,7 +4,7 @@
 # asks for the app name and region.
 # Status: verified with `fly launch`, `fly secrets import` and `fly deploy` on a throwaway app (docs/deploy/fly.md).
 
-app = "openmuse"
+app = "opendot"
 primary_region = "lhr"
 
 [build]
@@ -12,7 +12,7 @@ primary_region = "lhr"
 
 [env]
   PORT = "3000"
-  OPENMUSE_STATE_DIR = "/data"
+  OPENDOT_STATE_DIR = "/data"
 
 [http_service]
   internal_port = 3000
@@ -31,7 +31,7 @@ primary_region = "lhr"
     path = "/api/health"
 
 [[mounts]]
-  source = "openmuse_data"
+  source = "opendot_data"
   destination = "/data"
   initial_size = "1gb"
 

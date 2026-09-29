@@ -76,7 +76,7 @@ function MainBody({
     >
       <ConversationView
         conversation={conversation}
-        who="OpenMuse"
+        who="OpenDot"
         placeholder="Ask, or hand over work…"
         empty="Ask anything. Work that needs a computer becomes a topic in the sidebar."
         disabledReason={disabledReason}

@@ -15,7 +15,7 @@ export function blobs(): BlobStore {
       JSON.stringify({
         level: "warn",
         event: "state.memory_store",
-        message: "OPENMUSE_STATE_STORE=memory: topics and notes are lost when the process restarts",
+        message: "OPENDOT_STATE_STORE=memory: topics and notes are lost when the process restarts",
       }),
     );
     selected = memoryBlobStore();

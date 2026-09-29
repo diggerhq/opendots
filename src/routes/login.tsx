@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Sign in · OpenMuse" }] }),
+  head: () => ({ meta: [{ title: "Sign in · OpenDot" }] }),
   component: LoginPage,
 });
 
@@ -48,7 +48,7 @@ function LoginPage() {
     <main className="flex min-h-svh items-center justify-center p-6">
       <form onSubmit={submit} className="w-full max-w-sm space-y-5 rounded-xl border bg-card p-6 shadow-sm">
         <div className="space-y-1">
-          <h1 className="text-lg font-semibold tracking-tight">OpenMuse</h1>
+          <h1 className="text-lg font-semibold tracking-tight">OpenDot</h1>
           <p className="text-sm text-muted-foreground">Sign in with the owner secret from setup.</p>
         </div>
         <div className="space-y-2">

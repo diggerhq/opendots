@@ -7,7 +7,7 @@ import type { Plugin } from "vite";
 
 export function returnPathDevTrigger(): Plugin {
   return {
-    name: "openmuse:return-path-dev-trigger",
+    name: "opendot:return-path-dev-trigger",
     apply: "serve",
     configureServer(server) {
       let timer: ReturnType<typeof setInterval> | undefined;

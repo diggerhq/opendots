@@ -5,16 +5,16 @@ import { memoryBlobStore } from "@/lib/store/memory";
 
 export function testEnv(overrides: Record<string, string> = {}): void {
   Object.assign(process.env, {
-    OPENMUSE_COOKIE_SECRET: "c".repeat(40),
-    OPENMUSE_OWNER_SECRET: "o".repeat(24),
-    OPENMUSE_AGENT_SECRET: "a".repeat(40),
-    OPENMUSE_INSTALLATION_ID: "test",
-    OPENMUSE_APP_ORIGIN: "https://openmuse.test",
+    OPENDOT_COOKIE_SECRET: "c".repeat(40),
+    OPENDOT_OWNER_SECRET: "o".repeat(24),
+    OPENDOT_AGENT_SECRET: "a".repeat(40),
+    OPENDOT_INSTALLATION_ID: "test",
+    OPENDOT_APP_ORIGIN: "https://opendot.test",
     OPENCOMPUTER_PROJECT_ID: "prj_test",
-    OPENMUSE_COORDINATOR_AGENT: "c",
-    OPENMUSE_WORKER_AGENT: "w",
+    OPENDOT_COORDINATOR_AGENT: "c",
+    OPENDOT_WORKER_AGENT: "w",
     OPENCOMPUTER_API_KEY: "k",
-    OPENMUSE_STATE_STORE: "memory",
+    OPENDOT_STATE_STORE: "memory",
     ...overrides,
   });
   resetEnvCache();
